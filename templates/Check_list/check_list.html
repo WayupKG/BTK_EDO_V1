@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load qr_code %}
+{% block title %}Чек листы{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover" data-order='[[ 3, "desc" ]]' id="myTable">
+            <thead>
+              <tr>
+                <th scope="col" class="w-25">Номер</th>
+                <th scope="col" class="w-75 datatable-nosort">Название документа</th>
+                <th scope="col" class="w-25 datatable-nosort">Статус</th>
+                <th scope="col">Дата</th>
+                <th scope="col" class="datatable-nosort">Ссылка</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if check_lists %}
+              {% for check in check_lists %}
+              <tr>
+                <td><a href="{% url 'doc_view' slug=check.document.slug %}">{{ check.document.number }}</a></td>
+                <td><a
+                    href="{% url 'doc_view' slug=check.document.slug %}">{{ check.document.name|truncatechars:50 }}</a>
+                </td>
+                <td><a href="{% url 'doc_view' slug=check.document.slug %}">{{ check.document.status }}</a></td>
+                <td>{{ doc.created|date:'d-m-Y' }}</td>
+                <td><a href="{% url 'check_list_pdf' key=check.private_key %}" class="btn btn-secondary">Посмотреть</a>
+                </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td colspan="5" class="text-center">У вас пока нет Чек листов</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End Row-->
+{% endblock content %}

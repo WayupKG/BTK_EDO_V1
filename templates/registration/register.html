@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>Dashtreme Admin - Free Dashboard for Bootstrap 4 by Codervent</title>
+  <!-- loader-->
+  <link href="{% static 'css/pace.min.css' %}" rel="stylesheet"/>
+  <script src="{% static 'js/pace.min.js' %}"></script>
+  <!--favicon-->
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+  <!-- Bootstrap core CSS-->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
+  <!-- animate CSS-->
+  <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css"/>
+  <!-- Icons CSS-->
+  <link href="{% static 'css/icons.css' %}" rel="stylesheet" type="text/css"/>
+  <!-- Custom Style-->
+  <link href="{% static 'css/app-style.css' %}" rel="stylesheet"/>
+  
+</head>
+
+<body class="bg-theme bg-theme1">
+
+<!-- start loader -->
+   <div id="pageloader-overlay" class="visible incoming"><div class="loader-wrapper-outer"><div class="loader-wrapper-inner" ><div class="loader"></div></div></div></div>
+   <!-- end loader -->
+
+<!-- Start wrapper-->
+ <div id="wrapper">
+
+	<div class="card card-authentication1 mx-auto my-5">
+		<div class="card-body">
+		 <div class="card-content p-2">
+		 	<div class="text-center">
+		 		<img src="{% static 'images/EDOBTK.svg' %}" width="80" alt="logo icon">
+		 	</div>
+		  <div class="card-title text-uppercase text-center py-3">Регистрация</div>
+		    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                {{ form.as_table }}
+			  <div class="form-group mt-3">
+                  <label for="exampleInputName" class="sr-only">Email ID</label>
+                   <div class="position-relative has-icon-right">
+                      <input type="text" id="exampleInputName" name="username" pattern="^[a-zA-Z]+$" class="form-control input-shadow" placeholder="Имя пользователя">
+                      <div class="form-control-position">
+                          <i class="icon-user"></i>
+                      </div>
+                   </div>
+			  </div>
+			  <div class="form-group">
+			  <label for="exampleInputEmailId" class="sr-only">Email</label>
+			   <div class="position-relative has-icon-right">
+				  <input type="email" id="exampleInputEmailId" name="email" class="form-control input-shadow" placeholder="Ваш Email">
+				  <div class="form-control-position">
+					  <i class="icon-envelope-open"></i>
+				  </div>
+			   </div>
+			  </div>
+			  <div class="form-group">
+			   <label for="exampleInputPassword" class="sr-only">Password</label>
+			   <div class="position-relative has-icon-right">
+				  <input type="text" id="exampleInputPassword" name="password" class="form-control input-shadow" placeholder="Пароль">
+				  <div class="form-control-position">
+					  <i class="icon-lock"></i>
+				  </div>
+			   </div>
+			  </div>
+			  <div class="form-group">
+			   <label for="exampleInputPassword" class="sr-only">Password</label>
+			   <div class="position-relative has-icon-right">
+				  <input type="text" id="exampleInputPassword" name="re_password" class="form-control input-shadow" placeholder="Повторите пароль">
+				  <div class="form-control-position">
+					  <i class="icon-lock"></i>
+				  </div>
+			   </div>
+			  </div>
+
+			 <button type="submit" class="btn btn-light btn-block waves-effect waves-light">Регистрация</button>
+			 </form>
+		   </div>
+		  </div>
+		  <div class="card-footer text-center py-3">
+		    <p class="text-warning mb-0">У вас уже есть аккаунт? <a href="{% url 'login' %}"> Войдите в систему здесь</a></p>
+		  </div>
+	     </div>
+    
+     <!--Start Back To Top Button-->
+    <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+    <!--End Back To Top Button-->
+
+	</div><!--wrapper-->
+	
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	
+  <!-- sidebar-menu js -->
+  <script src="{% static 'js/sidebar-menu.js' %}"></script>
+  
+  <!-- Custom scripts -->
+  <script src="{% static 'js/app-script.js' %}"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{% static 'js/jquery.maskedinput.min.js' %}"></script>
+<script type="text/javascript">
+    //Код jQuery, установливающий маску для ввода телефона элементу input
+    //1. После загрузки страницы,  когда все элементы будут доступны выполнить...
+    jQuery(function ($) {
+        $("#id_tel_number").mask("0 (999) 99-99-99");
+    });
+</script>
+</body>
+</html>

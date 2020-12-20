@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+{% load static %}
+{% load qr_code %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Чек лист - {{ check.number }} - {{ check.document.number }}</title>
+    <style>
+        .print_edo {
+            position: absolute;
+            display: block;
+            top: 320px;
+            right: 0;
+            width: 250px;
+            height: 250px;
+            {% if check.status == 'Выполнено' %}
+                background-image: url(../../static/images/5asdkf/hsadfjh/ndshjslsd/print/done.svg);
+            {% elif check.status == 'Не выполнено' %}
+                background-image: url(../../static/images/5asdkf/hsadfjh/ndshjslsd/print/not_executed.svg);
+            {% else %}
+            {% endif %}
+        transform: rotate(-45deg);
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <main lang="kg"><div class="before_logo"></div>
+        <div class="row_box main_page">
+            <h1 class="text-center">Бишкек Техникалык Колледжи</h1>
+            <h2 class="text-center hr_h2">Электрондук документ жүгүртүү</h2>
+            <h2 class="mt-3 check text-center">*** ЧЕК БАРАК ***</h2>
+            <p class="p_span mt-4 mb-2"><span>Номери - {{ check.number }}</span><span class="float-right">Датасы - {{ check.created|date }}</span></p>
+            <div class="content_doc mt-4">
+                <h2 class="text-center mb-4">~~~ Документ жөнүндө ~~~</h2>
+                <p class="doc_p"><span>Автору</span><span class="float-right">{{ check.author }}</span></p>
+                <p class="doc_p"><span>Номери</span><span class="float-right">{{ check.document.number }}</span></p>
+                <p class="doc_p"><span>Аткаруу мөөнөтү</span><span class="float-right">{{ check.document.end_date }}</span></p>
+                <p class="doc_p"><span>Түзүү датасы</span><span class="float-right">{{ check.document.created|date }}</span></p>
+                <p class="doc_p"><span>Макамы</span><span class="float-right">
+                    {% if check.status == 'Выполнено' %}
+                        Аткарылды
+                    {% elif check.status == 'Не выполнено' %}
+                        Аткарылган жок
+                    {% else %}
+                        Белгисиз
+                    {% endif %}
+                </span></p>
+            </div>
+            <p class="p_span"></p>
+            {% qr_from_text check.private_key  size="m" image_format="png" error_correction="L" %}
+            <div class="print_edo"></div>
+        </div>
+    </main>
+    <main lang="ru"><div class="before_logo"></div>
+        <div class="row_box main_page">
+            <h1 class="text-center">Бишкекский Технический Колледж</h1>
+            <h2 class="text-center hr_h2">Электронный документооборот</h2>
+            <h2 class="mt-3 check text-center">*** ЧЕК ЛИСТ ***</h2>
+            <p class="p_span mt-4 mb-2"><span>Номер - {{ check.number }}</span><span class="float-right">Дата - {{ check.created|date }}</span></p>
+            <div class="content_doc mt-4">
+                <h2 class="text-center mb-4">~~~ О документе ~~~</h2>
+                <p class="doc_p"><span>Автор</span><span class="float-right">{{ check.author }}</span></p>
+                <p class="doc_p"><span>Номер</span><span class="float-right">{{ check.document.number }}</span></p>
+                <p class="doc_p"><span>Срок исполнение</span><span class="float-right">{{ check.document.end_date }}</span></p>
+                <p class="doc_p"><span>Дата создание</span><span class="float-right">{{ check.document.created|date }}</span></p>
+                <p class="doc_p"><span>Статус</span><span class="float-right">{{ check.status }}</span></p>
+            </div>
+            <p class="p_span"></p>
+            {% qr_from_text check.private_key  size="M" image_format="png" error_correction="L" %}
+            <div class="print_edo"></div>
+        </div>
+    </main>
+</body>
+</html>

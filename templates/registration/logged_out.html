@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Выход из системы{% endblock title %}
+
+{% block content %}
+        <!-- Hero -->
+        <div class="section section-header pb-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="alert alert-info shadow-soft mb-4 ml-3 mb-lg-5" role="alert">
+                        <span class="alert-inner--icon icon-lg"><span class="far fa-bell"></span></span>
+                        <span class="alert-heading">Внемание!</span>
+                        <p>Вы вышли из учетного записа, теперь вам не доступны некорторые функции сайта.</p>
+                        <hr>
+                        <p class="mb-0">Чтобы войти в нашу платформу нажмите <a href="{% url 'login' %}">сюда</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

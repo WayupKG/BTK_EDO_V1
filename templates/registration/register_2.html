@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <section class="learning_part">
+        <div class="container">
+            <div class="row align-items-sm-center align-items-lg-stretch">
+
+            <form method="POST" style="width: 100%; text-align: center">{% csrf_token %}
+                <table class="table_reg">
+                    <tr>
+                        <td><h1 class="h1">Регистрация</h1></td>
+                    <tr>
+                        <td>
+                            <p style="color: red; margin: 10px 0">
+
+                                {% if username_error %}
+                                    {{ username_error }}
+
+                                {% elif password2_error %}
+                                    {{ password2_error }}
+
+                                {% elif email_error %}
+                                    {{ email_error }}
+
+                            {% endif %}
+
+                             </p>
+
+
+
+                        </td>
+                    </tr>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="first_name" class="fist_name" placeholder="Имя" required></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="last_name" class="last_name" placeholder="Фамилия" required></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" pattern="^[a-zA-Z]+$" name="username" class="username" placeholder="Логин" required></td>
+                    </tr>
+                    <tr>
+                        <td><input type="email" name="email" class="Email" placeholder="Email" required></td>
+                    </tr>
+                    <tr>
+                        <td><input type="password" name="password" class="password" placeholder="Пароль" required></td>
+                    </tr>
+                    <tr>
+                        <td><input type="password" name="password2" class="password" placeholder="Подвердить пароль" required></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Регистрация" class="genric-btn primary btn-reg">
+                            <a href="{% url 'login' %}" class="genric-btn primary btn-reg">Войти</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            </div>
+        </div>
+    </section>
+    <style>
+
+    </style>
+{% endblock %}

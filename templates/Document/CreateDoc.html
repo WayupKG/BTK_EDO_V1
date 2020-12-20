@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Написать письмо{% endblock title %}
+
+{% block content %}
+<div class="row mt-3">
+    <div class="col-lg-8 m-auto">
+        <div class="card">
+            <div class="card-body">
+
+                <form enctype="multipart/form-data" method="POST">{% csrf_token %}
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label for="responsible">Выберите сотрудника</label>
+                            <select name="responsible" id="responsible_multi" multiple required>
+                                {% for staff in staffs %}
+                                {% if staff != user.profile %}
+                                <option value="{{ staff.pk }}">{{ staff.get_full_name }} -
+                                    ({{ staff.position.abbreviated_name }})</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="person">Ответственный:</label>
+                            <select name="person" class="form-control" required>
+                                {% for staff in staffs %}
+                                    {% if staff != user.profile %}
+                                        <option value="{{ staff.pk }}">{{ staff.get_full_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-5">
+                            {{ form.purposes.label_tag }}
+                            {{ form.purposes }}
+                        </div>
+                        <div class="form-group col-lg-7">
+                            {{ form.name.label_tag }}
+                            {{ form.name }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.body.label_tag }}
+                        {{ form.body }}
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-7">
+                            <label for="files">Прикрепите файл:</label>
+                            <input type="hidden" name="MAX_FILE_SIZE" value="300"/>
+                            <input type="file" name="files" id="files" class="form-control" multiple accept=".txt, .webp, .jpg, .jpeg, .png, .docx, .doc, .pdf, .zip, .rar, .xlsx, .xlsm, .xlsb, .xls, .csv">
+                        </div>
+                        <div class="form-group col-lg-5">
+                            {{ form.end_date.label_tag }}
+                            {{ form.end_date }}
+                        </div>
+                    </div>
+                    <div class="form-group text-center pt-3">
+                        <button type="submit" name="form_btn" value="document"
+                            class="btn btn-light px-5 font-weight-bold" style="font-size: 18px"><i
+                                class="fa fa-paper-plane-o "></i> Отправить</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Row-->
+<script src="{% static 'js/multiselect.min.js' %}"></script>
+<script>
+    document.multiselect('#responsible_multi')
+        .setCheckBoxClick("checkboxAll", function (target, args) {
+            console.log("Флажок Выбрать Все был нажат и получил значение ", args.checked);
+        })
+        .setCheckBoxClick("1", function (target, args) {
+            console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
+        });
+
+</script>
+<script src="{% static 'plugins/dropzone/src/dropzone.js' %}"></script>
+{% endblock content %}

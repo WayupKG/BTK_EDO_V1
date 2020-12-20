@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ doc.name }}{% endblock title %}
+
+{% block content %}
+<div class="row mt-3">
+    <div class="col-lg-12 m-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    {% if doc.status == 'Выполнено' %}
+                        <i class="fa fa-circle mr-1" style="font-size: 20px; color: #16b81b"></i>
+                    {% elif doc.status == 'Не выполнено' %}
+                        <i class="fa fa-circle mr-1" style="font-size: 20px; color: #bf4343"></i>
+                    {% else %}
+                        <i class="fa fa-circle mr-1" style="font-size: 20px; color: #daeb23"></i>
+                    {% endif %}
+                    {{ doc.author }}
+                    <div class="card-action">
+                         {{ doc.number }}
+                    </div>
+                </div>
+                <hr>
+                <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#profile" data-toggle="pill" class="nav-link active"><i class="fa fa-file"></i> <span class="hidden-xs">Документ</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Коментарии</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#responsible" data-toggle="pill" class="nav-link"><i class="fa fa-group"></i> <span class="hidden-xs">Назначенные сотрудники</span></a>
+                    </li>
+                    {% if doc.author == user.profile %}
+                        <li class="nav-item">
+                            <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link"><i class="icon-note"></i> <span class="hidden-xs">Редактировать</span></a>
+                        </li>
+                    {% endif %}
+                    {% if movement %}
+                        <li class="nav-item">
+                            <a href="javascript:void();" data-target="#reply" data-toggle="pill" class="nav-link"><i class="icon-note"></i> <span class="hidden-xs">Ответить</span></a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="tab-content pt-3 pb-0">
+
+                    <div class="tab-pane active" id="profile">
+                        {% if doc.type == 'Документ' %}
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h5 class="mb-4 mt-3">{{ doc.name }}</h5>
+                                    <p class="text-justify" style="text-indent: 50px">
+                                        {{ doc.body|safe  }}
+                                    </p>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-lg-5">Назначение - {{ doc.purposes }}</div>
+                                        <div class="col-lg-7"><span class="float-right">Срок исполнения - {{ doc.end_date }}</span></div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <h5 class="mb-4 mt-3">Прикрепленные файлы</h5>
+                                    {% if doc.files.all %}
+                                        <ol>
+                                            {% for file in doc.files.all %}
+                                                <li class="mb-2"><a href="{{ file.file.url }}" download>{{ file.filename }}</a></li>
+                                            {% endfor %}
+                                        </ol>
+                                    {% else %}
+                                        <p>Нет прикрепленного файла</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-lg-12">
+                                    <hr>
+                                        <h6 class="mt-4 d-md-block d-none">Документ был отправлен - {{ doc.created }} <span class="float-right">Обновлено - {{ doc.updated }}</span></h6>
+                                        <h6 class="mt-4 d-md-none d-block text-center">Отпр - {{ doc.created }} <br>Обно - {{ doc.updated }}</h6>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="w-50 m-auto">
+                                <h4 class="mb-4 mt-3 text-center">{{ doc.name }}</h4>
+                                <p class="text-justify" style="text-indent: 50px">
+                                    {{ doc.body|safe  }} Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur, cum dicta eum illo in ipsa laudantium libero maxime mollitia nesciunt officia perferendis praesentium quis quo reprehenderit sapiente similique? Enim inventore laboriosam officia sint vel. A autem inventore omnis reprehenderit unde? Dolorum ducimus eum, ex itaque minima quasi sequi suscipit!
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane" id="messages">
+                        <div class="form-group m-auto text-center font-33">В стадии разработки</div>
+                    </div>
+                    <div class="tab-pane" id="responsible">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <tr>
+                                    <th scope="col">Ф.И.О</th>
+                                    <th scope="col">Движение</th>
+                                    <th scope="col">Дата</th>
+                                </tr>
+                                <tbody>
+                                    {% for for_doc in doc.movements.all %}
+                                        <tr>
+                                            <td>
+                                                {% if for_doc.is_main_person %}
+                                                    <i class="fa fa-user mr-2"></i>
+                                                {% endif %}
+                                                {{ for_doc.responsible }}
+                                            </td>
+                                            <td>{{ for_doc.appointment }}</td>
+                                            <td>
+                                                {% if for_doc.appointment == 'В ожидании' %}
+                                                    ---------
+                                                {% else %}
+                                                    {{ for_doc.updated }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                      </div>
+                    </div>
+
+                {% if doc.author == user.profile %}
+                    <div class="tab-pane" id="edit">
+                        <div class="form-group m-auto text-center font-33">В стадии разработки</div>
+                    </div>
+                {% endif %}
+                {% if movement %}
+                    <div class="tab-pane" id="reply">
+                        {% if movement.is_open_reply %}
+                             <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+                                {% if movement.is_redirect %}
+                                    <button type="submit" name="btn_reply" value="Выполнено" class="btn btn-light px-5"><i class="fa fa-paper-plane-o "></i> Выполнил</button>
+                                    <button type="submit" name="btn_reply" value="Не выполнено" class="btn btn-light px-5"><i class="fa fa-paper-plane-o "></i> Не выполнил</button>
+                                {% else %}
+                                        <div class="form-group w-50 m-auto text-center">
+                                            <label class="col-form-label form-control-label">Ответить на письмо</label>
+                                            <div class="form-group">
+                                                <select class="form-control" name="appointment">
+                                                    {% if user.profile.is_admin %}
+                                                        <option value="Утверждаю">Утверждаю</option>
+                                                    {% endif %}
+                                                    <option value="Согласен">Согласен</option>
+                                                    <option value="Не согласен">Не согласен</option>
+                                                    <option value="Принято к исполнению">Принято к исполнению</option>
+                                                    <option value="Принято к сведенью">Принято к сведенью</option>
+                                                </select>
+                                            </div>
+                                            {% if user.profile.is_admin and movement.document.type != 'Документ' %}
+                                                <div class="form-group">
+                                                    <select name="redirect" class="form-control" required>
+                                                        {% for staff in staffs %}
+                                                            {% if staff != user.profile %}
+                                                                <option value="{{ staff.pk }}">{{ staff.get_full_name }}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            {% endif %}
+                                            {% if movement.document.type == 'Документ' %}
+                                                <div class="form-group">
+                                                    <textarea name="body" rows="7" class="form-control" placeholder="Описания (не обязательно)"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="hidden" name="MAX_FILE_SIZE" value="300"/>
+                                                    <input type="file" name="files" class="form-control" multiple accept=".txt, .webp, .jpg, .jpeg, .png, .docx, .doc, .pdf, .zip, .rar, .xlsx, .xlsm, .xlsb, .xls, .csv">
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-light px-5 font-weight-bold" style="font-size: 18px"><i class="fa fa-paper-plane-o "></i> Отправить</button>
+                                            </div>
+                                        </div>
+                                {% endif %}
+                             </form>
+                        {% else %}
+                            <div class="form-group w-50 m-auto text-center">
+                                <label class="col-form-label form-control-label">Ответ был отправлен</label>
+                                <p>Вы не можете изменить текущий ответ </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--End Row-->
+<script src="{% static 'js/multiselect.min.js' %}"></script>
+<script>
+	document.multiselect('#responsible')
+		.setCheckBoxClick("checkboxAll", function(target, args) {
+			console.log("Флажок Выбрать Все был нажат и получил значение ", args.checked);
+		})
+		.setCheckBoxClick("1", function(target, args) {
+			console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
+		});
+
+</script>
+{% endblock content %}

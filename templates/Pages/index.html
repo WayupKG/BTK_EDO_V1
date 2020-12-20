@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <!--Start Dashboard Content-->
+{#    {% if user.profile.is_admin %}#}
+{#        <div class="card mt-3 d-none d-md-block">#}
+{#            <div class="card-content">#}
+{#                <div class="row row-group m-0">#}
+{#                    <div class="col-lg-4">#}
+{#                        <img src="{% static 'images/SVG/4384867-01.svg' %}" class="w-50">#}
+{#                    </div>#}
+{#                    <div class="col-lg-8"></div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endif %}#}
+	<div class="row">
+        <div class="col-12 col-lg-8 col-xl-8">
+            <div class="card">
+                <div class="card-header">Информация</div>
+                <div class="card-body text-center">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="d-block w-100" src="{% static 'images/test/img3.jpg' %}" alt="First slide">
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100" src="{% static 'images/test/img4.jpg' %}" alt="Second slide">
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100" src="{% static 'images/test/img5.jpg' %}" alt="Third slide">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="col-12 col-lg-4 col-xl-4">
+            <div class="card">
+                <div class="card-header">Статистика</div>
+                   <div class="card-body">
+                     <div class="chart-container-2">
+                       <canvas id="MyChart"></canvas>
+                      </div>
+                   </div>
+               <div class="table-responsive">
+                 <table class="table align-items-center">
+                   <tbody>
+                   <tr>
+                       <td colspan="2" class="m-0 p-0">
+                           <button id="changeCircleSize" class="changeCircleSize"><i class="fa fa-pie-chart"></i> Полукруг/Полный Круг</button>
+                       </td>
+                   </tr>
+                     <tr>
+                       <td><i class="fa fa-circle mr-2" style="color: #16b81b"></i> Выполнено</td>
+                       <td>{{ done_count }}</td>
+                     </tr>
+                     <tr>
+                       <td><i class="fa fa-circle mr-2" style="color: #daeb23"></i> В процессе</td>
+                       <td>{{ process_count }}</td>
+                     </tr>
+                     <tr>
+                       <td><i class="fa fa-circle mr-2" style="color: #bf4343"></i> Не выполнено</td>
+                       <td>{{ not_executed_count }}</td>
+                     </tr>
+                   </tbody>
+                 </table>
+               </div>
+             </div>
+         </div>
+	</div><!--End Row-->
+	
+	<div class="row">
+	 <div class="col-12 col-lg-12">
+	   <div class="card">
+	     <div class="card-header">Последние новости
+	       <div class="table-responsive">
+                 <table class="table align-items-center table-flush table-borderless">
+                  <thead>
+                   <tr>
+                     <th>№</th>
+                     <th>Кому</th>
+                     <th>Называние</th>
+                     <th>Дата</th>
+                   </tr>
+                   </thead>
+                   <tbody>
+                   <tr>
+                       <td>1</td>
+                       <td>Эстебес уулу Адилет</td>
+                       <td>Обновить сайт Бишкекского технического Колледжа</td>
+                       <td>20-09-2020</td>
+                   </tr>
+                 </tbody></table>
+               </div>
+         </div>
+         </div>
+	   </div>
+	</div><!--End Row-->
+
+    <script>
+			var config = {
+				type: 'doughnut',
+				data: {
+					labels: ["Выполнено", "В процессе", "Не выполнено"],
+					datasets: [{
+						backgroundColor: ["rgba(5, 235, 12, 0.5)", "#daeb23", "#bf4343"],
+						data: [`{{ done_count }}`, `{{ process_count }}`, `{{ not_executed_count }}`],
+						borderWidth: [0, 0, 0]}]
+                },
+			options: {
+				maintainAspectRatio: false,
+                legend: {
+				   position :"bottom",
+                   display: false,
+                   labels: {fontColor: '#ddd', boxWidth:15}}, tooltips: {displayColors:false}},
+                title: {display: true, text: 'Chart.js Doughnut Chart'},
+                animation: {animateScale: true, animateRotate: true}
+			};
+
+		window.onload = function() {
+			var ctx = document.getElementById('MyChart').getContext('2d');
+			window.myDoughnut = new Chart(ctx, config);
+		};
+
+		document.getElementById('changeCircleSize').addEventListener('click', function() {
+			if (window.myDoughnut.options.circumference === Math.PI) {
+				window.myDoughnut.options.circumference = 2 * Math.PI;
+				window.myDoughnut.options.rotation = -Math.PI / 2;
+			} else {
+				window.myDoughnut.options.circumference = Math.PI;
+				window.myDoughnut.options.rotation = -Math.PI;
+			}
+            window.myDoughnut.update();
+		});
+    </script>
+{% endblock content %}

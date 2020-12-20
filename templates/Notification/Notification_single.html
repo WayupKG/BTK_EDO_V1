@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ notification.body }}{% endblock title %}
+
+{% block content %}
+<div class="row mt-3">
+    <div class="col-lg-12 m-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    {% if notification.document.status == 'Выполнено' %}
+                        <i class="fa fa-circle mr-1" style="font-size: 20px; color: #16b81b"></i>
+                    {% elif notification.document.status == 'Не выполнено' %}
+                        <i class="fa fa-circle mr-1" style="font-size: 20px; color: #bf4343"></i>
+                    {% else %}
+                        <i class="fa fa-circle mr-1" style="font-size: 20px; color: #daeb23"></i>
+                    {% endif %}
+                    {{ notification.document.author }}
+                    <div class="card-action">
+                         {{ notification.document.number }}
+                    </div>
+                </div>
+                <hr>
+
+                <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                    <li class="nav-item"><a href="javascript:void();" data-target="#notification" data-toggle="pill" class="nav-link active"><i class="fa fa-bell-o"></i> <span class="hidden-xs">Уведомление</span></a></li>
+                    <li class="nav-item"><a href="javascript:void();" data-target="#document" data-toggle="pill" class="nav-link"><i class="fa fa-file"></i> <span class="hidden-xs">Документ</span></a></li>
+                    <li class="nav-item"><a href="javascript:void();" data-target="#responsible" data-toggle="pill" class="nav-link"><i class="fa fa-group"></i> <span class="hidden-xs">Назначенные сотрудники</span></a></li>
+                </ul>
+
+                <div class="tab-content pt-3 pr-3 pl-3 pb-0">
+                    <div class="tab-pane active" id="notification">
+                        {% if notification.type == 'Ответ' %}
+                            <div class="row">
+                                <h5 class="mb-4 mt-3">{{ notification.body }}</h5>
+                                <div class="col-lg-7">
+                                    <p>Описание: </p>
+                                    <p>{{ notification.reply.description }}</p>
+                                </div>
+                                <div class="col-lg-5">
+                                    <p class="mb-2">Прикрепленные файлы</p>
+                                    {% if notification.reply.files.all %}
+                                        <ol>
+                                            {% for file in notification.reply.files.all %}
+                                                <li class="mb-2"><a href="{{ file.file.url }}" download>{{ file.filename }}</a></li>
+                                            {% endfor %}
+                                        </ol>
+                                    {% else %}
+                                        <p>Нет прикрепленного файла</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% elif notification.type == 'Чеклист' %}
+                            <h5 class="mb-4 mt-3">{{ notification.body }}</h5>
+                        {% endif %}
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {% if notification.document.type == 'Документ' and notification.type == 'Ответ' %}
+                                    {% if notification.reply.status == 'Принят' %}
+                                        Статус: Принят
+                                    {% elif notification.reply.status == 'Не принят' %}
+                                        Статус: Не принят
+                                    {% else %}
+                                        <form action="" method="post">{% csrf_token %}
+                                            <button type="submit" name="btn_reply" value="Принят" class="btn btn-light px-5"><i class="fa fa-paper-plane-o "></i> Принят</button>
+                                            <button type="submit" name="btn_reply" value="Не принят" class="btn btn-light px-5"><i class="fa fa-paper-plane-o "></i> Не принят</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-6"><h6 class="float-right align-content-center">Дата - {{ notification.created }}</h6></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="document">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h5 class="mb-4 mt-3">{{ notification.document.name }}</h5>
+                                <p class="text-justify" style="text-indent: 50px">
+                                    {{ notification.document.body|safe  }}
+                                </p>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-lg-5">Назначение - {{ notification.document.purposes }}</div>
+                                    <div class="col-lg-7"><span class="float-right">Срок исполнения - {{ notification.document.end_date }}</span></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <h5 class="mb-4 mt-3">Прикрепленные файлы</h5>
+                                {% if notification.document.files.all %}
+                                    <ol>
+                                        {% for file in notification.document.files.all %}
+                                            <li class="mb-2"><a href="{{ file.file.url }}" download>{{ file.filename }}</a></li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    <p>Нет прикрепленного файла</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-12">
+                                <hr>
+                                <h6 class="mt-4 d-md-block d-none">Документ был отправлен - {{ notification.document.created }} <span class="float-right">Обновлено - {{ notification.document.updated }}</span></h6>
+                                <h6 class="mt-4 d-md-none d-block text-center">Отпр - {{ notification.document.created }} <br>Обно - {{ notification.document.updated }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="responsible">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <tr>
+                                    <th scope="col">Ф.И.О</th>
+                                    <th scope="col">Движение</th>
+                                    <th scope="col">Дата</th>
+                                </tr>
+                                <tbody>
+                                    {% for for_doc in notification.document.movements.all %}
+                                        <tr>
+                                            <td>
+                                                {% if for_doc.is_main_person %}
+                                                    <i class="fa fa-user mr-2"></i>
+                                                {% endif %}
+                                                {{ for_doc.responsible }}</td>
+                                            <td>
+                                                {% if for_doc.status == 'Выполнено' %}
+                                                    {{ for_doc.appointment }}
+                                                {% else %}
+                                                    В ожидании
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if for_doc.status == 'Выполнено' %}
+                                                    {{ for_doc.updated }}
+                                                {% else %}
+                                                    ---------
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--End Row-->
+<script src="{% static 'js/multiselect.min.js' %}"></script>
+<script>
+	document.multiselect('#responsible')
+		.setCheckBoxClick("checkboxAll", function(target, args) {
+			console.log("Флажок Выбрать Все был нажат и получил значение ", args.checked);
+		})
+		.setCheckBoxClick("1", function(target, args) {
+			console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
+		});
+
+</script>
+{% endblock content %}

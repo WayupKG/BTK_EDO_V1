@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Уведомление{% endblock title %}
+
+{% block content %}
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+			  <div class="table-responsive">
+              <table class="table table-hover" data-order='[[ 1, "desc" ]]' id="myTable">
+                <thead>
+                  <tr>
+                    <th scope="col" class="w-75 datatable-nosort">Уведомление</th>
+                    <th scope="col" >Дата</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if nots %}
+                        {% for notification in nots %}
+                            {% if notification.view == 'Не просмотрено' %}
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-circle mr-1" style="font-size: 12px; color: #0aa60f"></i>
+                                        <a href="{% url 'remove_notification' id=notification.pk slug=notification.document.slug %}">
+                                            {{ notification.body|truncatechars:80 }}</a>
+                                    </td>
+                                    <td>{{ notification.created|date:'d-m-Y' }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>
+                                        <i class="mr-3" style="font-size: 12px; color: #0aa60f"></i>
+                                        <a href="{% url 'single_notification' id=notification.pk slug=notification.document.slug %}">
+                                            {{ notification.body|truncatechars:80 }}</a>
+                                    </td>
+                                    <td>{{ notification.created|date:'d-m-Y' }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                    {% else %}
+                        <tr><td colspan="2" class="text-center">У вас пока нет новых уведомлений</td></tr>
+                    {% endif %}
+                </tbody>
+              </table>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div><!--End Row-->
+{% endblock content %}

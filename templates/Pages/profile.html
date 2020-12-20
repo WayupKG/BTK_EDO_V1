@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile.get_full_name }}{% endblock title %}
+
+{% block content %}
+<div class="row mt-3">
+    <div class="col-lg-4">
+        <div class="card profile-card-2">
+            <div class="card-img-block">
+                <img class="img-fluid" src="https://via.placeholder.com/800x500" alt="Card image cap">
+            </div>
+            <div class="card-body pt-5">
+                <img src="https://via.placeholder.com/110x110" alt="profile-image" class="profile">
+                <h5 class="card-title">{{ profile.get_full_name }}</h5>
+                <p class="card-text">О себе: {{ profile.body }}</p>
+                <div class="icon-block">
+                    <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
+                    <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
+                    <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
+                </div>
+            </div>
+
+            <div class="card-body border-top border-light">
+                <div class="media align-items-center">
+                    <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                            <p>HTML5 <span class="float-right">65%</span></p>
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" style="width:65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="media align-items-center">
+                    <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                            <p>Bootstrap 4 <span class="float-right">50%</span></p>
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" style="width:50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="media align-items-center">
+                    <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                            <p>AngularJS <span class="float-right">70%</span></p>
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" style="width:70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="media align-items-center">
+                    <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                            <p>React JS <span class="float-right">35%</span></p>
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" style="width:35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#profile" data-toggle="pill"
+                            class="nav-link active"><i class="icon-user"></i> <span class="hidden-xs">Профиль</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#settings" data-toggle="pill" class="nav-link"><i
+                                class="icon-envelope-open"></i> <span class="hidden-xs">Настройки</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link"><i
+                                class="icon-note"></i> <span class="hidden-xs">Edit</span></a>
+                    </li>
+                </ul>
+                <div class="tab-content p-3">
+                    <div class="tab-pane active" id="profile">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Ф.И.О</h6>
+                                <p>
+                                    {{ profile.last_name }}
+                                    {{ profile.first_name }}{% if profile.sur_name %} {{ profile.sur_name }}{% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Должность:</h6>
+                                <p class="card-text">{{ profile.position.name }}</p>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <h6>О себе:</h6>
+                                <p class="card-text">{{ profile.body }}</p>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <h6>Дата рождение:</h6>
+                                <p class="card-text">{{ profile.date_of_birth }}</p>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <h6>Номер телефона:</h6>
+                                <p class="card-text">{{ profile.tel_number }}</p>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <h6>Идентификационный номер налогоплательщика (сокращенно ИНН):</h6>
+                                <p class="card-text">{{ profile.itn }}</p>
+                            </div>
+                        </div>
+                        <!--/row-->
+                    </div>
+                    <div class="tab-pane" id="settings">
+                        <div class="alert alert-info alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <div class="alert-icon">
+                                <i class="icon-info"></i>
+                            </div>
+                            <div class="alert-message">
+                                <span><strong>Внимание!</strong> Настройки уведомлений будут работать если вы указали
+                                    рабочий
+                                    Email.</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <form action="" method="POST">{% csrf_token %}
+                                <table class="table table-hover table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="icheck-material-white">
+                                                    <input type="checkbox" name="is_mail_inbox" class="float-right"
+                                                        id="id_is_mail_inbox"
+                                                        {% if profile.settings.is_mail_inbox %}checked{% endif %}>
+                                                    <label for="id_is_mail_inbox">Включить уведомление о новом
+                                                        документе:</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="icheck-material-white">
+                                                    <input type="checkbox" name="is_mail_movement" class="form-control"
+                                                        id="id_is_mail_movement"
+                                                        {% if profile.settings.is_mail_movement %}checked{% endif %}>
+                                                    <label for="id_is_mail_movement">Включить уведомление о действие
+                                                        документах:</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="icheck-material-white">
+                                                    <input type="checkbox" name="is_mail_ad" class="form-control"
+                                                        id="id_is_mail_ad"
+                                                        {% if profile.settings.is_mail_ad %}checked{% endif %}>
+                                                    <label for="id_is_mail_ad">Включить уведомление о новых
+                                                        событиях:</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group text-center pt-3">
+                                                    <button type="submit" name="form_btn" value="settings"
+                                                        class="btn btn-light px-5 font-weight-bold"
+                                                        style="font-size: 18px"><i class="fa fa-floppy-o"></i>
+                                                        Сохранить</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="edit">
+                        <form method="POST">{% csrf_token %}
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Фамилия:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" name="last_name" type="text"
+                                        value="{{profile.last_name}}" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Имя:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" name="first_name" type="text"
+                                        value="{{ profile.first_name }}" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Отчество:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" name="sur_name" type="text"
+                                        value="{% if profile.sur_name %}{{ profile.sur_name }}{% endif %}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Email:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" name="email" type="email" value="{{ profile.email }}"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Фото</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" type="file">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Номер телефона:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" id="id_phone" name="phone" type="text"
+                                        value="{{profile.tel_number}}" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">ИНН:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" type="number" name="itn" value="{{ profile.itn }}"
+                                        placeholder="Идентификационный номер налогоплательщика (сокращенно ИНН)"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Дата рождения:</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" type="date" name="date"
+                                        value="{{ profile.date_of_birth|date:'Y-m-d' }}" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">О себе:</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control" name="body" rows="5"
+                                        required>{{ profile.body }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group text-center pt-3">
+                                <button type="submit" name="form_btn" value="profile"
+                                    class="btn btn-light px-5 font-weight-bold" style="font-size: 18px"><i
+                                        class="fa fa-floppy-o"></i>
+                                    Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{% static 'js/jquery.maskedinput.min.js' %}"></script>
+<script type="text/javascript">
+    //Код jQuery, установливающий маску для ввода телефона элементу input
+    //1. После загрузки страницы,  когда все элементы будут доступны выполнить...
+    jQuery(function ($) {
+        $("#id_phone").mask("0 (999) 99-99-99");
+    });
+</script>
+{% endblock content %}

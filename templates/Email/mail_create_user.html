@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        html, body, table {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            border-radius: 10px;
+            background-color: rgba(0,0,0,.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            color: #ffffff;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 50%;
+                margin: 50px 0;
+                padding: 10px;
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                margin: 30px 0;
+                padding: 10px;
+            }
+        }
+        .logo {
+            margin: 0;
+            padding: 7px 0 0 0;
+            height: 80px;
+            width: 100%;
+        }
+        .logo img {
+            width: 70px;
+        }
+
+        .content h1 {
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .p {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <table background="https://www.btk.kg/wp-content/uploads/2020/11/1-2.jpg">
+        <tbody>
+            <tr>
+                <td>
+                    <center>
+                        <table class="container" >
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="logo">
+                                            <img src="https://www.btk.kg/wp-content/uploads/2019/09/Icon-btk_Монтажная-область-1.png" alt="">
+                                        </div>
+                                        <div class="content">
+                                            <h1>Добро пожаловать {{ user }}</h1>
+                                            <p style="text-align: justify">Вы были зарегистрированы на портале EDOBTK.</p>
+                                            <p style="text-align: justify">Ваш логин: {{ user.account.username }}</p>
+                                            <p style="text-align: justify">Ваш пароль: {{ password }}</p>
+                                            <hr color="#fff">
+                                            <p class="p" style="text-align: justify">Вы получили это письмо, так как являетесь пользователем портала <a href="http://edo.btk.kg/">EdoBTK</a>.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </center>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap');
+@page {
+    size: A5;
+}
+
+/* Check List PDF ------------------------ */
+
+main {
+    font-family: 'Crimson Text', serif;
+}
+
+.main_page {
+    width: 40%;
+    margin: 0;
+    z-index: 2;
+}
+.before_logo {
+    position: absolute;
+    display: block;
+    width: 400px;
+    height: 400px;
+    background-image: url(../images/EDOBTK.svg);
+    background-repeat: no-repeat;
+    opacity: 0.05;
+    z-index: 1;
+}
+.main_page h1 {
+    font-size: 20px;
+}.main_page h2 {
+    font-size: 18px;
+}
+
+.main_page .box {
+    border: 2px dashed silver;
+    padding: 10px;
+}
+.hr_h2, .p_span {
+    border-bottom: 1px dashed black;
+    padding-bottom: 10px;
+}
+.check {
+    font-size: 25px !important;
+}
+.p_span {
+    font-size: 14px;
+}
+
+.doc_p {
+    font-size: 15px;
+    border-bottom: 1px dotted black;
+    padding-bottom: 1px;
+    margin-bottom: 10px;
+}
+
+.main_page img {
+    width: 150px;
+}

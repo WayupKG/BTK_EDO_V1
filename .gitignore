@@ -1,0 +1,13 @@
+.idea
+db.sqlite3
+db3.sqlite3
+documentation
+venv
+env
+Media
+logs
+celerybeat-schedule
+__pycache__
+local_settings.py
+prod_settings.py
+*/migrations/*
