@@ -1,5 +1,7 @@
-import Documents.models
-import User.models
+import Check_list.models as check_models
+import Documents.models as doc_models
+import User.models as user_models
+
 from django.utils import timezone
 from EdoMain.celery import app
 from django.core.mail import EmailMultiAlternatives
@@ -10,7 +12,7 @@ import time
 
 @app.task
 def send_mail(user_id, body):
-    user = User.models.Profile.objects.get(pk=user_id)
+    user = user_models.Profile.objects.get(pk=user_id)
     subject, from_email, to = 'Электронный документооборот', 'edo.btk.kg@gmail.com', user.email
     html_content = render_to_string('Email/mail_template.html', {'user': user, 'body': body})  #рендеринг с динамическим значением
     text_content = strip_tags(html_content)  # Удалите html-тег. Чтобы люди могли видеть хотя бы чистый текст.
@@ -25,7 +27,7 @@ def send_mail(user_id, body):
 @app.task
 def processing_database():
     date_now = timezone.now().strftime("%d-%m-%Y")
-    documents = Documents.models.Document.objects.filter(status='В процессе', type='Документ')
+    documents = doc_models.Document.objects.filter(status='В процессе', type='Документ')
     try:
         for document in documents:
             if document.end_date.strftime("%d-%m-%Y") < date_now:
@@ -59,7 +61,7 @@ def processing_database():
 
 @app.task
 def create_send_mail(user_id, password):
-    user = User.models.Profile.objects.get(pk=user_id)
+    user = user_models.Profile.objects.get(pk=user_id)
     subject, from_email, to = 'Электронный документооборот', 'edo.btk.kg@gmail.com', user.email
     html_content = render_to_string('Email/mail_create_user.html', {'user': user, 'password': password})  #рендеринг с динамическим значением
     text_content = strip_tags(html_content)  # Удалите html-тег. Чтобы люди могли видеть хотя бы чистый текст.
@@ -69,3 +71,12 @@ def create_send_mail(user_id, password):
     msg.attach_alternative(html_content, "text/html")
     # msg.attach_file('static/images/EDOBTK.svg')
     msg.send()
+
+
+@app.task
+def create_check_list(document_id):
+    doc = doc_models.Document.objects.get(pk=document_id)
+    update_redirect, create_redirect = check_models.CheckList.objects.get_or_create(document=doc, defaults={'document': doc})
+    if not create_redirect:
+        update_redirect.document = doc
+        update_redirect.save()
