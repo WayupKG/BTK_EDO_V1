@@ -1,7 +1,5 @@
 from django.db import models
-import Documents.models
 import Pages.tasks
-import User.models
 
 
 class Notification(models.Model):
@@ -16,12 +14,13 @@ class Notification(models.Model):
         ('Рапорт', 'Рапорт'),
         ('Ответ', 'Ответ'),
         ('Чеклист', 'Чеклист'),
+        ('Решение', 'Решение'),
         ('Другое', 'Другое'),
     )
-    document = models.ForeignKey(Documents.models.Document, on_delete=models.CASCADE, related_name='notifications', null=True, blank=True)
-    reply = models.ForeignKey(Documents.models.ReplyDocument, on_delete=models.CASCADE, related_name='notifications', null=True, blank=True)
-    body = models.CharField('Описания',  max_length=150)
-    user = models.ForeignKey(Documents.models.Profile, on_delete=models.CASCADE, related_name='notifications')
+    document = models.ForeignKey('Documents.Document', on_delete=models.CASCADE, related_name='notifications', null=True, blank=True)
+    reply = models.ForeignKey('Documents.ReplyDocument', on_delete=models.CASCADE, related_name='notifications', null=True, blank=True)
+    body = models.CharField('Описания',  max_length=900)
+    user = models.ForeignKey('User.Profile', on_delete=models.CASCADE, related_name='notifications')
     view = models.CharField('Просмотр', choices=VIEW, max_length=50, default='Не просмотрено')
     type = models.CharField('Type', max_length=20, choices=TYPE, default='Простой', null=True)
     created = models.DateTimeField(auto_now_add=True)

@@ -1,11 +1,10 @@
-import os
 from django.db import models
 from User.models import Profile, SettingsProfile
-import Check_list
 from django.utils.text import slugify
+import os
 import transliterate
-
-from Pages.tasks import send_mail
+import Notification.models as notif_models
+from Pages.tasks import send_mail, create_check_list
 
 
 def gen_slug(number, name):
@@ -40,17 +39,17 @@ def upload_to_reply_file(instance, filename):
            f'{list_file[0]}-{instance.reply.document.number}.{list_file[-1]}/'
 
 
-class In_Process_Manager(models.Manager):
+class InProcessManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status='В процессе').order_by('-created')
 
 
-class Done_Manager(models.Manager):
+class DoneManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status='Выполнено').order_by('-created')
 
 
-class Not_Executed_Manager(models.Manager):
+class NotExecutedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status='Не выполнено').order_by('-created')
 
@@ -86,9 +85,9 @@ class Document(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
-    in_process = In_Process_Manager()
-    done = Done_Manager()
-    not_executed = Not_Executed_Manager()
+    in_process = InProcessManager()
+    done = DoneManager()
+    not_executed = NotExecutedManager()
 
     def __str__(self):
         return f'{self.number}-{self.name}'
@@ -111,12 +110,7 @@ class Document(models.Model):
                 self.slug = gen_slug(self.number, self.name)
 
         if self.status == 'Выполнено':
-            doc = Document.objects.get(pk=self.pk)
-            update_redirect, create_redirect = Check_list.models.CheckList.objects.get_or_create(document=doc, defaults={'document': doc})
-            if not create_redirect:
-                update_redirect.document = doc
-                update_redirect.save()
-
+            create_check_list.delay(self.pk)
         super(Document, self).save(*args, **kwargs)
 
     class Meta:
@@ -165,9 +159,9 @@ class MovementOfDocument(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
-    in_process = In_Process_Manager()
-    done = Done_Manager()
-    not_executed = Not_Executed_Manager()
+    in_process = InProcessManager()
+    done = DoneManager()
+    not_executed = NotExecutedManager()
 
     def save(self, *args, **kwargs):
         if self.view == 'Не просмотрено' and self.responsible.settings.is_mail_inbox:
@@ -225,9 +219,9 @@ class ReplyDocument(models.Model):
             body = f'{self.document.author} не принял ваш ответ. Ответ был отправлен на документ с номером {self.document.number}. ' \
                    f'Не забудьте отправить повторный ответ до конца срока исполнение.'
         self.movement.save()
-
-        if self.movement.responsible.settings.is_mail_movement and body:
-            send_mail.delay(self.movement.responsible.pk, body)
+        if body:
+            notif_models.Notification.objects.create(document=self.document, body=body,
+                                                     user=self.movement.responsible, type='Решение')
         super(ReplyDocument, self).save(*args, **kwargs)
 
     def __str__(self):

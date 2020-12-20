@@ -1,8 +1,7 @@
 from django.db import models
-from Documents.models import Document
-from Notification.models import Notification
-from User.models import Profile, SettingsProfile
 import random
+
+import Notification.models as notif_models
 
 
 def create_number(id_doc):
@@ -21,8 +20,8 @@ class CheckList(models.Model):
         ('Не выполнено', 'Не выполнено'),
     )
     number = models.CharField('Номер чек листа', max_length=20, null=True, blank=True)
-    document = models.OneToOneField(Document, on_delete=models.PROTECT, related_name='check_lists')
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='check_lists', null=True, blank=True)
+    document = models.OneToOneField('Documents.Document', on_delete=models.PROTECT, related_name='check_lists')
+    author = models.ForeignKey('User.Profile', on_delete=models.CASCADE, related_name='check_lists', null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS, null=True, blank=True)
     private_key = models.CharField(max_length=180, default=0)
     updated = models.DateTimeField(auto_now=True)
@@ -31,13 +30,14 @@ class CheckList(models.Model):
     objects = models.Manager()
 
     def save(self, *args, **kwargs):
-        chars = 'abcd465efgh7ijk5lno4165pqrs7tdfhh4gdfsjk456saad5ad6489fuv8wx9yz12378440'
+        chars = 'abcd465efgh7ijk5lno4165pqrs7t1234dfhh4gdfsjk456saad5ad6489fghfgfhuv8wx9yz12378440'
         key = ''
-        for i in range(12):
+        for i in range(20):
             key += random.choice(chars)
         self.private_key = key
         self.author = self.document.author
         self.status = self.document.status
+        print(self.document.status)
         try:
             check = CheckList.objects.order_by('-pk')[0]
             try:
@@ -50,7 +50,7 @@ class CheckList(models.Model):
             except TypeError:
                 self.number = create_number(1)
         body = f'Создан чек лист на документ с номером {self.document.number}'
-        Notification.objects.create(document=self.document, user=self.author, view='Не просмотрено', body=body, type='Чеклист')
+        notif_models.Notification.objects.create(document=self.document, user=self.author, view='Не просмотрено', body=body, type='Чеклист')
         super(CheckList, self).save(*args, **kwargs)
 
     class Meta:

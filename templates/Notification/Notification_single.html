@@ -31,7 +31,12 @@
 
                 <div class="tab-content pt-3 pr-3 pl-3 pb-0">
                     <div class="tab-pane active" id="notification">
-                        {% if notification.type == 'Ответ' %}
+                        {% if notification.type == 'Решение' %}
+                            <div class="m-4 text-center">
+                                <h5 class="mb-4 mt-3">{{ notification.body }}</h5>
+                                <a href="{% url 'doc_view' slug=notification.document.slug %}">Открыть документ</a>
+                            </div>
+                        {% elif notification.type == 'Ответ' %}
                             <div class="row">
                                 <h5 class="mb-4 mt-3">{{ notification.body }}</h5>
                                 <div class="col-lg-7">
