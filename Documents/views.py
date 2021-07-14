@@ -86,8 +86,7 @@ class InboxDocView(LoginRequiredMixin, TemplateView):
     template_name = 'Document/inbox.html'
 
     def get(self, request, *args, **kwargs):
-        docs = MovementOfDocument.objects.filter(
-            responsible=request.user.profile)
+        docs = MovementOfDocument.objects.filter(responsible=request.user.profile)
         return render(request, self.template_name, {'docs': docs})
 
 

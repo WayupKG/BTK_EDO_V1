@@ -89,15 +89,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-
-MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'Media')
-MEDIA_DIR = os.path.join(BASE_DIR, 'Media')
-MEDIA_DIRS = [os.path.join(BASE_DIR, 'Media')]
-
 # Send Mail
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
